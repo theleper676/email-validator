@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
@@ -13,6 +13,10 @@ function ValidationForm() {
     info: null,
     isSubmitted: false,
   });
+
+  useEffect(()=> {
+    console.log(state);
+  })
 
   const handleEmailChange = async (e: any) => {
     await setState({
@@ -31,7 +35,7 @@ function ValidationForm() {
       "https://csqa-email-validator.herokuapp.com/validate",
       { params }
     );
-    setState({ ...state, isSubmitted: true });
+    setState({...state,info: res.data}); 
   };
 
   return (

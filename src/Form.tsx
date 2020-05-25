@@ -2,6 +2,7 @@ import React, { useState,useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
+import Response from './Response';
 import "./App.css";
 
 function ValidationForm() {
@@ -17,9 +18,10 @@ function ValidationForm() {
   })
 
   const handleEmailChange = async (e: any) => {
+    const {value} = e.target;
     await setState({
       ...state,
-      email: e.target.value,
+      email: value,
     });
   };
 
@@ -29,11 +31,17 @@ function ValidationForm() {
       email: state.email,
       fixTypos: state.fixTypos,
     };
-    const res = await axios.get(
-      "https://csqa-email-validator.herokuapp.com/validate",
-      { params }
-    );
-    setState({...state,info: res.data}); 
+    try{
+      const res = await axios.get(
+        "https://csqa-email-validator.herokuapp.com/validate",
+        { params }
+      );
+      setState({...state,info: res.data,isSubmitted: true}); 
+    }
+    catch(err){
+      console.log(err);
+    }
+    
   };
 
   return (
@@ -58,6 +66,7 @@ function ValidationForm() {
               setState({ ...state, fixTypos: event.target.checked })
             }
           />
+          {state.isSubmitted && <Response /> }
         </Form.Group>
         <Button variant="primary" type="submit">
           Submit

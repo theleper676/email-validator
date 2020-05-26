@@ -66,7 +66,7 @@ function ValidationForm() {
               setState({ ...state, fixTypos: event.target.checked })
             }
           />
-          {state.isSubmitted && <Response /> }
+          {state.isSubmitted && <Response info={state.info} /> }
         </Form.Group>
         <Button variant="primary" type="submit">
           Submit

@@ -1,8 +1,11 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
-import Response from './Response';
+import Response from "./Response";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 import "./App.css";
 
 function ValidationForm() {
@@ -13,12 +16,12 @@ function ValidationForm() {
     isSubmitted: false,
   });
 
-  useEffect(()=> {
-    console.log(state);
-  })
+  useEffect(() => {
+    console.log(state.info);
+  });
 
   const handleEmailChange = async (e: any) => {
-    const {value} = e.target;
+    const { value } = e.target;
     await setState({
       ...state,
       email: value,
@@ -31,46 +34,62 @@ function ValidationForm() {
       email: state.email,
       fixTypos: state.fixTypos,
     };
-    try{
+    try {
       const res = await axios.get(
         "https://csqa-email-validator.herokuapp.com/validate",
         { params }
       );
-      setState({...state,info: res.data,isSubmitted: true}); 
-    }
-    catch(err){
+      setState({ ...state, info: res.data, isSubmitted: true });
+    } catch (err) {
       console.log(err);
     }
-    
   };
 
   return (
     <div className="App-form">
       <Form onSubmit={handleSubmit}>
-        <Form.Group controlId="emailValidation">
-          <Form.Label>Email adress: </Form.Label>
-          <Form.Control
-            type="email"
-            placeholder="Enter Email"
-            className="input-field"
-            onChange={handleEmailChange}
-          />
-        </Form.Group>
-        <Form.Group>
-          <Form.Label>Please tick for validation: </Form.Label>
-          <Form.Check
-            type="checkbox"
-            label="Fix Typos"
-            className="field"
-            onChange={(event: any) =>
-              setState({ ...state, fixTypos: event.target.checked })
-            }
-          />
-          {state.isSubmitted && <Response info={state.info} /> }
-        </Form.Group>
-        <Button variant="primary" type="submit">
-          Submit
-        </Button>
+        <Container>
+          <Row>
+            <Col>
+            <Form.Group controlId="emailValidation">
+              <Form.Label>Email adress: </Form.Label>
+              <Form.Control
+                type="email"
+                placeholder="Enter Email"
+                className="input-field"
+                onChange={handleEmailChange}
+              />
+            </Form.Group>
+            </Col>
+          </Row>
+          <Row>
+            <Col> <Form.Group>
+              <Form.Label>Please tick for validation: </Form.Label>
+              <Form.Check
+                type="checkbox"
+                label="Fix Typos"
+                className="field"
+                onChange={(event: any) =>
+                  setState({ ...state, fixTypos: event.target.checked })
+                }
+              />
+              {state.isSubmitted && <Row><Col lg={"auto"}><Response info={state.info}/></Col></Row>}
+            </Form.Group></Col>
+           
+          </Row>
+
+          <Row>
+            <Col>
+            <Button variant="primary" type="submit">
+              Submit
+            </Button>
+            </Col>
+           <Col>
+           <Button variant="danger">Clear</Button>
+           </Col>
+           
+          </Row>
+        </Container>
       </Form>
     </div>
   );

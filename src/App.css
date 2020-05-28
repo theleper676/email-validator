@@ -28,26 +28,13 @@
   color: #61dafb;
 }
 
-.form-inline {
-  width: 100%;
+.Response {
+  margin: 20px;
 }
 
-.form-group {
-  width: 90%;
+.Submit-button{
+  margin: 5rem;
 }
-
-.input-group {
-  width: 90% !important;
-}
-
-.form-control {
-  width: 50% !important;
-}
-
-span.input-group-addon {
-  width: 50px !important;
-}
-
 
 @keyframes App-logo-spin {
   from {

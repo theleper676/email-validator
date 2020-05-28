@@ -6,6 +6,7 @@ import Response from "./Response";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Loader from "./Loader"
 import "./App.css";
 
 function ValidationForm() {
@@ -14,10 +15,12 @@ function ValidationForm() {
     fixTypos: false,
     info: null,
     isSubmitted: false,
+    isLoading: false,
+    status: 200,
   });
 
   useEffect(() => {
-    console.log(state.info);
+    console.log(state);
   });
 
   const handleEmailChange = async (e: any) => {
@@ -30,6 +33,10 @@ function ValidationForm() {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    setState({
+      ...state,
+      isLoading: true,
+    })
     const params = {
       email: state.email,
       fixTypos: state.fixTypos,
@@ -39,7 +46,7 @@ function ValidationForm() {
         "https://csqa-email-validator.herokuapp.com/validate",
         { params }
       );
-      setState({ ...state, info: res.data, isSubmitted: true });
+      setState({ ...state, info: res.data, isSubmitted: true,isLoading: false,status: res.status });
     } catch (err) {
       console.log(err);
     }
@@ -73,6 +80,7 @@ function ValidationForm() {
                   setState({ ...state, fixTypos: event.target.checked })
                 }
               />
+              {state.isLoading && <Loader />}
               {state.isSubmitted && <Row><Col lg={"auto"}><Response info={state.info}/></Col></Row>}
             </Form.Group></Col>
            

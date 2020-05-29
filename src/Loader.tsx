@@ -1,5 +1,8 @@
 import React from "react";
 import "./App.css";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 import "bootstrap/dist/css/bootstrap.min.css";
 function Loader() {
     interface state {
@@ -7,7 +10,12 @@ function Loader() {
     }
     return (
         <div className="Response">
-            <h1>Loading...</h1>
+            <Container />
+            <Row>
+                <Col xs={12}>
+                    Loading...
+                </Col>
+            </Row>
         </div>
       );
 }

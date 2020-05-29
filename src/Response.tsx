@@ -6,14 +6,17 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-function Response(props: any) {
+
+
+
+function Response(props: any ) {
   const { domain, domain_error, email, mx_records_found, valid } = props.info;
   return (
     <div className="Response">
       <Container>
-        <Row>
-          <Col lg={"auto"}>
-          <ListGroup style={{ width: "22rem" }}>
+          <Row>
+            <Col md={6}>
+            <ListGroup style={{ width: "22rem" }}>
             <ListGroup.Item><b>Email:</b> {email}</ListGroup.Item>
             <ListGroup.Item><b>Domain:</b> {domain}</ListGroup.Item>
             <ListGroup.Item variant={valid ? "success" : "danger"}>
@@ -26,8 +29,8 @@ function Response(props: any) {
              <b>Domain Error?</b>  {domain_error.toString()}
             </ListGroup.Item>
           </ListGroup>
-          </Col>
-        </Row>
+            </Col>
+          </Row>
       </Container>
     </div>
   );

@@ -9,7 +9,12 @@ import Col from "react-bootstrap/Col";
 import Loader from "./Loader"
 import "./App.css";
 
+
+
 function ValidationForm() {
+
+  type Email  = string;
+
   const [state, setState] = useState({
     email: null,
     fixTypos: false,
@@ -31,7 +36,7 @@ function ValidationForm() {
     });
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     setState({
       ...state,
@@ -80,12 +85,16 @@ function ValidationForm() {
                   setState({ ...state, fixTypos: event.target.checked })
                 }
               />
-              {state.isLoading && <Loader />}
-              {state.isSubmitted && <Row><Col lg={"auto"}><Response info={state.info}/></Col></Row>}
+              
             </Form.Group></Col>
-           
           </Row>
-
+          <Row>
+            <Col xs={12}>
+            {state.isLoading && <Loader />}
+              {state.isSubmitted && <Response info={state.info}/>}
+            </Col>
+         
+          </Row>
           <Row>
             <Col>
             <Button variant="primary" type="submit">

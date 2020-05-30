@@ -11,11 +11,12 @@ import Col from "react-bootstrap/Col";
 
 function Response(props: any ) {
   const { domain, domain_error, email, mx_records_found, valid } = props.info;
+  const {result, score, block} = props.hunterInfo;
   return (
     <div className="Response">
       <Container>
           <Row>
-            <Col md={6}>
+            <Col xs={6} style={{margin: '20px'}}>
             <ListGroup style={{ width: "22rem" }}>
             <ListGroup.Item><b>Email:</b> {email}</ListGroup.Item>
             <ListGroup.Item><b>Domain:</b> {domain}</ListGroup.Item>
@@ -27,6 +28,16 @@ function Response(props: any ) {
             </ListGroup.Item>
             <ListGroup.Item variant={domain_error ? "danger" : "success"}>
              <b>Domain Error?</b>  {domain_error.toString()}
+            </ListGroup.Item>
+          </ListGroup>
+            </Col>
+
+            <Col xs={6} style={{margin: '20px'}}>
+            <ListGroup style={{ width: "22rem" }}>
+            <ListGroup.Item><b>Is Email Risky? </b> {result}</ListGroup.Item>
+            <ListGroup.Item><b>Email score: </b> {score}</ListGroup.Item>
+            <ListGroup.Item>
+              <b>Is Email Blocked? </b> {block.toString()}
             </ListGroup.Item>
           </ListGroup>
             </Col>

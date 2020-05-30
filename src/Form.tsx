@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import Response from "./Response";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -13,19 +13,19 @@ import "./App.css";
 
 function ValidationForm() {
 
-  type Email  = string;
 
+  interface queryParams {
+    email: string | null,
+    fixTypos?: boolean,
+    api_key?: string,
+  }
   const [state, setState] = useState({
     email: null,
     fixTypos: false,
     info: null,
     isSubmitted: false,
     isLoading: false,
-    status: 200,
-  });
-
-  useEffect(() => {
-    console.log(state);
+    hunterInfo: null,
   });
 
   const handleEmailChange = async (e: any) => {
@@ -41,21 +41,34 @@ function ValidationForm() {
     setState({
       ...state,
       isLoading: true,
-    })
-    const params = {
-      email: state.email,
-      fixTypos: state.fixTypos,
-    };
-    try {
-      const res = await axios.get(
-        "https://csqa-email-validator.herokuapp.com/validate",
-        { params }
-      );
-      setState({ ...state, info: res.data, isSubmitted: true,isLoading: false,status: res.status });
-    } catch (err) {
-      console.log(err);
-    }
+    });
+
+    GetHunterInfo();
   };
+
+  function GetHunterInfo () {
+    const API = "https://csqa-email-validator.herokuapp.com/validate";
+    const hunterAPI = 'https://hunter.io/v2/email-verifier';
+
+    const params: queryParams = {
+      email: state.email,
+      api_key: process.env.API_KEY,
+    };
+
+    const req1 = axios.get(API,{params});
+    const req2 = axios.get(hunterAPI,{params});
+
+
+  axios.all([req1,req2])
+  .then(axios.spread((...responses) =>{
+    const res1: AxiosResponse = responses[0];
+    const res2: AxiosResponse = responses[1];
+
+  setState({ ...state, info: res1.data, isSubmitted: true,isLoading: false, hunterInfo: res2.data.data });
+  }));
+
+  }
+  
 
   return (
     <div className="App-form">
@@ -91,7 +104,7 @@ function ValidationForm() {
           <Row>
             <Col xs={12}>
             {state.isLoading && <Loader />}
-              {state.isSubmitted && <Response info={state.info}/>}
+              {state.isSubmitted && <Response info={state.info} hunterInfo={state.hunterInfo}/>}
             </Col>
          
           </Row>

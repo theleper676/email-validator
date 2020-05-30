@@ -56,7 +56,10 @@ function ValidationForm() {
     };
 
     const req1 = axios.get(API,{params});
-    const req2 = axios.get(hunterAPI,{params});
+    const req2 = axios.get(hunterAPI,{params:{
+      email: state.email,
+      api_key: process.env.API_KEY,
+    }});
 
 
   axios.all([req1,req2])

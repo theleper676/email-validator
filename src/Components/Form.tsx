@@ -1,18 +1,19 @@
 import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import Response from "./Response";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Loader from "./Loader"
-import "./App.css";
+import Loader from "./Loader";
+import dotenv from 'dotenv';
 
 
 
 function ValidationForm() {
 
+  dotenv.config();
 
   interface queryParams {
     email: string | null,
@@ -52,20 +53,17 @@ function ValidationForm() {
 
     const params: queryParams = {
       email: state.email,
-      api_key: process.env.API_KEY,
+      api_key: '4c4fdfa41329e980977210df5bddf568d904f8a5',
     };
 
     const req1 = axios.get(API,{params});
-    const req2 = axios.get(hunterAPI,{params:{
-      email: state.email,
-      api_key: process.env.API_KEY,
-    }});
+    const req2 = axios.get(hunterAPI,{params});
 
 
   axios.all([req1,req2])
   .then(axios.spread((...responses) =>{
-    const res1: AxiosResponse = responses[0];
-    const res2: AxiosResponse = responses[1];
+    const res1 = responses[0];
+    const res2= responses[1];
 
   setState({ ...state, info: res1.data, isSubmitted: true,isLoading: false, hunterInfo: res2.data.data });
   }));

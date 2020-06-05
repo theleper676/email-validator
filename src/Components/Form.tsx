@@ -6,12 +6,14 @@ import Response from "./Response";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Loader from "./Loader"
+import Loader from "./Loader";
+import dotenv from 'dotenv';
 
 
 
 function ValidationForm() {
 
+  dotenv.config();
 
   interface queryParams {
     email: string | null,
@@ -51,13 +53,11 @@ function ValidationForm() {
 
     const params: queryParams = {
       email: state.email,
-      api_key: process.env.API_KEY,
+      api_key: '4c4fdfa41329e980977210df5bddf568d904f8a5',
     };
 
     const req1 = axios.get(API,{params});
-    const req2 = axios.get(hunterAPI,{params: {
-      email: state.email,
-    }});
+    const req2 = axios.get(hunterAPI,{params});
 
 
   axios.all([req1,req2])

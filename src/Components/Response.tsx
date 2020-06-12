@@ -1,5 +1,5 @@
 import React from "react";
-import "./App.css";
+import '../App.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import ListGroup from "react-bootstrap/ListGroup";
 import Container from "react-bootstrap/Container";

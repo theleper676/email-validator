@@ -34,12 +34,12 @@ function ValidationForm() {
     hunterInfo: null,
   });
 
-  const [DNSstate, setDNSstate ] = useState(null);
+  const [DNSstate, setDNSstate] = useState(null);
+  const [record, setRecord] = useState('A');
 
-  useEffect(()=> {
-    console.log(DNSstate)
-  })
-
+  useEffect(() => {
+    console.log(DNSstate);
+  });
 
   const handleEmailChange = async (e: any) => {
     const { value } = e.target;
@@ -49,8 +49,6 @@ function ValidationForm() {
     });
   };
 
-
- 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     setState({
@@ -61,21 +59,23 @@ function ValidationForm() {
     GetHunterInfo();
   };
 
-  const getDNSinfo =  () => {
-
-    axios.post('https://api.perfops.net/run/dns-resolve',{
-
-      target: state.email,
-      param: "NS",
-      dnsServer: "127.0.0.1",
-      location: "world",
-      limit: 1,
-    })
-    .then(res => {
-      axios.get(`https://api.perfops.net/run/dns-resolve/${res.data.id}`)
-      .then(DNSres => setDNSstate(DNSres.data));
-    })
-};
+  const getDNSinfo = () => {
+    axios
+      .post("https://api.perfops.net/run/dns-resolve", {
+        target: state.email,
+        param: record,
+        dnsServer: "127.0.0.1",
+        location: "world",
+        limit: 1,
+      })
+      .then((res: { data: { id: any } }) => {
+        axios
+          .get(`https://api.perfops.net/run/dns-resolve/${res.data.id}`)
+          .then((DNSres: { data: { items: React.SetStateAction<null> } }) =>
+            setDNSstate(DNSres.data.items)
+          );
+      });
+  };
 
   function GetHunterInfo() {
     const API = "https://csqa-email-validator.herokuapp.com/validate";
@@ -124,6 +124,17 @@ function ValidationForm() {
           </Row>
           <Row>
             <Col>
+              <Form.Label>Select record to check</Form.Label>
+              <Form.Control onChange={(event: any) => setRecord(event.target.value) }  as="select" custom >
+                <option>A</option>
+                <option>CNAME</option>
+                <option>NS</option>
+                <option>SOA</option>
+              </Form.Control>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
               {" "}
               <Form.Group>
                 <Form.Label>Please tick for validation: </Form.Label>
@@ -156,7 +167,12 @@ function ValidationForm() {
               <Button variant="danger">Clear</Button>
             </Col>
             <Col>
-              <Button onClick={getDNSinfo} variant={DNSstate ? 'primary' : 'info'}>Get DNS status</Button>
+              <Button
+                onClick={getDNSinfo}
+                variant={DNSstate ? 'info' : "primary"}
+              >
+                Get DNS status
+              </Button>
             </Col>
           </Row>
         </Container>

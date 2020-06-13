@@ -61,7 +61,7 @@ function ValidationForm() {
 
 
   axios.all([req1,req2])
-  .then(axios.spread((...responses) =>{
+  .then(axios.spread((...responses: any[]) =>{
     const res1 = responses[0];
     const res2= responses[1];
 

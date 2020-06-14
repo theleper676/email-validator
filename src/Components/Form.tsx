@@ -64,7 +64,7 @@ function ValidationForm() {
       .post("https://api.perfops.net/run/dns-resolve", {
         target: state.email,
         param: record,
-        dnsServer: "127.0.0.1",
+        dnsServer: "8.8.8.8,208.67.222.222,199.85.126.10,64.6.64.6,8.26.56.26,209.244.0.3",
         location: "world",
         limit: 1,
       })
@@ -112,10 +112,9 @@ function ValidationForm() {
           <Row>
             <Col>
               <Form.Group controlId="emailValidation">
-                <Form.Label>Email adress: </Form.Label>
+                <Form.Label>Enter Email or domain: </Form.Label>
                 <Form.Control
-                  type="email"
-                  placeholder="Enter Email"
+                  type="text"
                   className="input-field"
                   onChange={handleEmailChange}
                 />
@@ -160,11 +159,8 @@ function ValidationForm() {
           <Row>
             <Col>
               <Button variant="primary" type="submit">
-                Submit
+                Check Email Status
               </Button>
-            </Col>
-            <Col>
-              <Button variant="danger">Clear</Button>
             </Col>
             <Col>
               <Button
@@ -174,6 +170,10 @@ function ValidationForm() {
                 Get DNS status
               </Button>
             </Col>
+            <Col>
+              <Button variant="danger">Clear</Button>
+            </Col>
+    
           </Row>
         </Container>
       </Form>

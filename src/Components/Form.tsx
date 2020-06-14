@@ -8,6 +8,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Loader from "./Loader";
 import dotenv from "dotenv";
+import SSLcheck from './SSLcheck';
 
 function ValidationForm() {
   dotenv.config();
@@ -169,6 +170,9 @@ function ValidationForm() {
               >
                 Get DNS status
               </Button>
+            </Col>
+            <Col>
+            <SSLcheck domain={state.email}/>
             </Col>
             <Col>
               <Button variant="danger">Clear</Button>

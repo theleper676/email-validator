@@ -10,6 +10,7 @@ import Spinner from 'react-bootstrap/Spinner';
 interface ModalcheckProps {
     domain: string | null,
     connectionMethod: number,
+    record?: string
 }
 
 interface params {
@@ -24,6 +25,8 @@ const Modalcheck: React.FC<ModalcheckProps> = (props) => {
     const [data, setData] = useState();
     const [show, setShow] = useState(false);
     const [connectionMode, setConnectionMode] = useState(props.connectionMethod);
+    const [record , setRecord] = useState(props.record);
+    const [message, setMessage] = useState('');
 
     const handleShow = () => setShow(true);
     const handleClose = () => setShow(false);
@@ -40,18 +43,19 @@ const Modalcheck: React.FC<ModalcheckProps> = (props) => {
             const { data: { id }} = await axios
                 .post("https://api.perfops.net/run/dns-resolve", {
                     target: props.domain,
-                    param: 'A',
+                    param: record,
                     dnsServer: "8.8.8.8,208.67.222.222,199.85.126.10,64.6.64.6,8.26.56.26,209.244.0.3",
                     location: "world",
                     limit: 1,
                 });
             const DNSres = await axios
                 .get(`https://api.perfops.net/run/dns-resolve/${id}`);
-
             setData(DNSres.data.items);
             setCheck(true);
         } catch (err) {
-            console.log('This is the error' + err);
+            if(err.response.data.status === 404){
+                setMessage(`${err.response.data.status} - That can't be good, please contact support`)
+            }
             setCheck(!Checked);
         }
     };
@@ -76,7 +80,9 @@ const Modalcheck: React.FC<ModalcheckProps> = (props) => {
                     <Modal.Title>{(connectionMode === 1 ? 'Domain Connection test' : 'SSL connection test')}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {!Checked && <Spinner animation="border" />}</Modal.Body>
+                    {!Checked && <Spinner animation="border" />}
+                    {Checked && message}
+                    </Modal.Body>
                 <Modal.Footer>
                     {Checked && <Button variant="primary" onClick={() => {
                         handleClose();

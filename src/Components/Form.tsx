@@ -39,7 +39,7 @@ function ValidationForm() {
   const [record, setRecord] = useState('A');
 
   useEffect(() => {
-    console.log(DNSstate);
+    console.log(record);
   });
 
   const handleEmailChange = async (e: any) => {
@@ -148,7 +148,7 @@ function ValidationForm() {
             <Col>
             </Col>
             <Col>
-            <Modalcheck domain={state.email} connectionMethod={1}/>
+            <Modalcheck domain={state.email} connectionMethod={1}  record={record}/>
             </Col>
             <Col>
               <Button variant="danger">Clear</Button>

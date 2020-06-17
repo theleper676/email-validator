@@ -71,7 +71,7 @@ const Modalcheck: React.FC<ModalcheckProps> = (props) => {
     }
     return (
         <div>
-            <Button variant="info" onClick={() => {
+            <Button variant='outline-primary' onClick={() => {
                 handleShow();
                 CheckConnection();
             }}>Check connection</Button>

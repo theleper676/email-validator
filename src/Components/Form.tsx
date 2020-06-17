@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import Dropdown from 'react-bootstrap/Dropdown'
 import axios from "axios";
 import Response from "./Response";
 import Container from "react-bootstrap/Container";
@@ -9,6 +10,8 @@ import Col from "react-bootstrap/Col";
 import Loader from "./Loader";
 import dotenv from "dotenv";
 import Modalcheck from './Modalcheck';
+import InputGroup from 'react-bootstrap/InputGroup';
+import FormControl from 'react-bootstrap/FormControl'
 
 function ValidationForm() {
   dotenv.config();
@@ -34,8 +37,21 @@ function ValidationForm() {
     isLoading: false,
     hunterInfo: null,
   });
+  const DNSrecords = [{
+    key: 'A',
+    item: 'A',
+  },
+  {
+    key: 'NS',
+    item: 'NS',
+  },
+  {
+    key: 'CNAME',
+    item: 'CNAME',
+  }
 
-  const [DNSstate, setDNSstate] = useState(null);
+  ];
+
   const [record, setRecord] = useState('A');
 
   useEffect(() => {
@@ -88,46 +104,37 @@ function ValidationForm() {
     );
   }
 
+
   return (
     <div className="App-form">
       <Form onSubmit={handleSubmit}>
         <Container>
           <Row>
             <Col>
-              <Form.Group controlId="emailValidation">
-                <Form.Label>Enter Email or domain: </Form.Label>
-                <Form.Control
-                  type="text"
-                  className="input-field"
-                  onChange={handleEmailChange}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Form.Label>Select record to check</Form.Label>
-              <Form.Control onChange={(event: any) => setRecord(event.target.value) }  as="select" custom >
-                <option>A</option>
-                <option>CNAME</option>
-                <option>NS</option>
-                <option>SOA</option>
-              </Form.Control>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
               {" "}
               <Form.Group>
-                <Form.Label>Please tick for validation: </Form.Label>
-                <Form.Check
-                  type="checkbox"
-                  label="Fix Typos"
-                  className="field"
-                  onChange={(event: any) =>
-                    setState({ ...state, fixTypos: event.target.checked })
-                  }
-                />
+                <Form.Label>
+                  Enter domain
+    </Form.Label>
+                <InputGroup className="w-50">
+                  <FormControl id="inlineFormInputGroup" placeholder="Enter Domain or Email" onChange={handleEmailChange} />
+                  <InputGroup.Append>
+                    <Dropdown onSelect={(eventKey: any) => setRecord(eventKey)}>
+                      <Dropdown.Toggle variant='info' id='record-dropdown'>
+                        {record}
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        {DNSrecords.map(record => (
+                          // eslint-disable-next-line react/jsx-key
+                          <Dropdown.Item key={record.key} eventKey={record.key}>{record.item}</Dropdown.Item>
+                        ))}
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </InputGroup.Append>
+                  <InputGroup.Append>
+                    <Modalcheck domain={state.email} connectionMethod={1} record={record} />
+                  </InputGroup.Append>
+                </InputGroup>
               </Form.Group>
             </Col>
           </Row>
@@ -148,12 +155,8 @@ function ValidationForm() {
             <Col>
             </Col>
             <Col>
-            <Modalcheck domain={state.email} connectionMethod={1}  record={record}/>
-            </Col>
-            <Col>
               <Button variant="danger">Clear</Button>
             </Col>
-    
           </Row>
         </Container>
       </Form>

@@ -4,6 +4,8 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Spinner from 'react-bootstrap/Spinner';
+
 function Loader() {
     interface state {
         status: number,
@@ -13,7 +15,7 @@ function Loader() {
             <Container />
             <Row>
                 <Col xs={12}>
-                    Loading...
+                <Spinner animation="border" />
                 </Col>
             </Row>
         </div>

@@ -8,7 +8,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Loader from "./Loader";
 import dotenv from "dotenv";
-import SSLcheck from './SSLcheck';
+import Modalcheck from './Modalcheck';
 
 function ValidationForm() {
   dotenv.config();
@@ -58,24 +58,6 @@ function ValidationForm() {
     });
 
     GetHunterInfo();
-  };
-
-  const getDNSinfo = () => {
-    axios
-      .post("https://api.perfops.net/run/dns-resolve", {
-        target: state.email,
-        param: record,
-        dnsServer: "8.8.8.8,208.67.222.222,199.85.126.10,64.6.64.6,8.26.56.26,209.244.0.3",
-        location: "world",
-        limit: 1,
-      })
-      .then((res: { data: { id: any } }) => {
-        axios
-          .get(`https://api.perfops.net/run/dns-resolve/${res.data.id}`)
-          .then((DNSres: { data: { items: React.SetStateAction<null> } }) =>
-            setDNSstate(DNSres.data.items)
-          );
-      });
   };
 
   function GetHunterInfo() {
@@ -164,15 +146,9 @@ function ValidationForm() {
               </Button>
             </Col>
             <Col>
-              <Button
-                onClick={getDNSinfo}
-                variant={DNSstate ? 'info' : "primary"}
-              >
-                Get DNS status
-              </Button>
             </Col>
             <Col>
-            <SSLcheck domain={state.email}/>
+            <Modalcheck domain={state.email} connectionMethod={1}/>
             </Col>
             <Col>
               <Button variant="danger">Clear</Button>

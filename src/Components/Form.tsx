@@ -56,9 +56,23 @@ function ValidationForm() {
       api_key: '4c4fdfa41329e980977210df5bddf568d904f8a5',
     };
 
-    const req1 = axios.get(API,{params});
-    const req2 = axios.get(hunterAPI,{params});
+    const req1 = axios.get(API, { params });
+    const req2 = axios.get(hunterAPI, { params });
 
+    axios.all([req1, req2]).then(
+      axios.spread((...responses: any[]) => {
+        const res1 = responses[0];
+        const res2 = responses[1];
+
+        setState({
+          ...state,
+          info: res1.data,
+          isSubmitted: true,
+          isLoading: false,
+          hunterInfo: res2.data.data,
+        });
+      })
+    );
 
   axios.all([req1,req2])
   .then(axios.spread((...responses: any[]) =>{

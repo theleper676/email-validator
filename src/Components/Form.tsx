@@ -74,14 +74,15 @@ function ValidationForm() {
       })
     );
 
-  axios.all([req1,req2])
-  .then(axios.spread((...responses: any[]) =>{
-    const res1 = responses[0];
-    const res2= responses[1];
-
-  setState({ ...state, info: res1.data, isSubmitted: true,isLoading: false, hunterInfo: res2.data.data });
-  }));
-
+  
+    axios.all([req1,req2])
+    .then(axios.spread((...responses: any[]) =>{
+      const res1 = responses[0];
+      const res2= responses[1];
+  
+    setState({ ...state, info: res1.data, isSubmitted: true,isLoading: false, hunterInfo: res2.data.data });
+    }));
+  
   }
   
 

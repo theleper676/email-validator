@@ -36,6 +36,12 @@ const Modalcheck: React.FC<ModalcheckProps> = (props) => {
         console.log(data);
     })
 
+    const CheckSSLStatus = async () => {
+        const res = await axios.get(`https://dns-ssl-checker.herokuapp.com/sslcheck/${props.domain}`);
+        setData(res.data);
+        setCheck(!Checked);
+    }
+
     //Check DNS info
     const CheckDNSStatus = async () => {
         //Check if the records are fine, if not return error
@@ -66,7 +72,7 @@ const Modalcheck: React.FC<ModalcheckProps> = (props) => {
             CheckDNSStatus();
         }
         else if (connectionMode === 2) {
-            console.log('SSL connection mode started');
+            CheckSSLStatus();
         }
     }
     return (

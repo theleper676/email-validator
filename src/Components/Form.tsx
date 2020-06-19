@@ -141,7 +141,7 @@ function ValidationForm() {
                     </Dropdown>
                   </InputGroup.Append>
                   <InputGroup.Append>
-                    <Modalcheck domain={state.email} connectionMethod={1} record={record} />
+                    <Modalcheck domain={state.email} connectionMethod={2} record={record} />
                   </InputGroup.Append>
                 </InputGroup>
               </Form.Group>

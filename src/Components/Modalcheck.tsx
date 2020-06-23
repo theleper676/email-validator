@@ -6,6 +6,7 @@ import Button from "react-bootstrap/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Modal from 'react-bootstrap/Modal';
 import Spinner from 'react-bootstrap/Spinner';
+import ProgressBar from 'react-bootstrap/ProgressBar'
 
 interface ModalcheckProps {
     domain: string | null,
@@ -27,6 +28,8 @@ const Modalcheck: React.FC<ModalcheckProps> = (props) => {
     const [connectionMode, setConnectionMode] = useState(props.connectionMethod);
     const [record , setRecord] = useState(props.record);
     const [message, setMessage] = useState('');
+    const [statusMessage, setStatusMessage] = useState('SSL Check started');
+    const [progress, setPorgress] = useState(0);
 
     const handleShow = () => setShow(true);
     const handleClose = () => setShow(false);
@@ -37,9 +40,28 @@ const Modalcheck: React.FC<ModalcheckProps> = (props) => {
     })
 
     const CheckSSLStatus = async () => {
-        const res = await axios.get(`https://dns-ssl-checker.herokuapp.com/sslcheck/${props.domain}`);
-        setData(res.data);
-        setCheck(!Checked);
+        const {data} = await axios.get(`https://dns-ssl-checker.herokuapp.com/sslcheck/${props.domain}`);
+        console.log('SSL check started');
+        setStatusMessage(data.statusMessage);
+        setTimeout(async ()=> {
+            const {data :{ endpoints }} = await axios.get(`https://dns-ssl-checker.herokuapp.com/sslcheck/${props.domain}`);
+            if (endpoints[0].progress === 100){
+                setPorgress(endpoints[0].progress);
+                setStatusMessage(endpoints[0].statusMessage);
+                setCheck(!Checked);
+            }
+            else{
+               const interval = setInterval(async ()=> {
+                    const {data :{ endpoints }} = await axios.get(`https://dns-ssl-checker.herokuapp.com/sslcheck/${props.domain}`);
+                    setPorgress(endpoints[0].progress);
+                    setStatusMessage(endpoints[0].statusDetailsMessage);
+                    if(endpoints[0].progress === 100){
+                        setCheck(!Checked);
+                        clearInterval(interval);
+                    }
+                },6000);
+            }
+        },8000);
     }
 
     //Check DNS info
@@ -88,6 +110,8 @@ const Modalcheck: React.FC<ModalcheckProps> = (props) => {
                 <Modal.Body>
                     {!Checked && <Spinner animation="border" />}
                     {Checked && message}
+                    <p>{statusMessage}</p>
+                    <ProgressBar animated now={progress} label={`${progress}%`} />
                     </Modal.Body>
                 <Modal.Footer>
                     {Checked && <Button variant="primary" onClick={() => {

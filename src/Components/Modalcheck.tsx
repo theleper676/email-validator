@@ -40,16 +40,20 @@ const Modalcheck: React.FC<ModalcheckProps> = (props) => {
     })
 
     const CheckSSLStatus = async () => {
+        //start the ssl check
         const {data} = await axios.get(`https://dns-ssl-checker.herokuapp.com/sslcheck/${props.domain}`);
         console.log('SSL check started');
         setStatusMessage(data.statusMessage);
+        //initate the first handshake
         setTimeout(async ()=> {
             const {data :{ endpoints }} = await axios.get(`https://dns-ssl-checker.herokuapp.com/sslcheck/${props.domain}`);
+            //if the progress of the fist handshake is already 100, stop
             if (endpoints[0].progress === 100){
                 setPorgress(endpoints[0].progress);
                 setStatusMessage(endpoints[0].statusMessage);
                 setCheck(!Checked);
             }
+            //else, continue to check until progress of the check is 100
             else{
                const interval = setInterval(async ()=> {
                     const {data :{ endpoints }} = await axios.get(`https://dns-ssl-checker.herokuapp.com/sslcheck/${props.domain}`);

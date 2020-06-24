@@ -123,7 +123,7 @@ const Modalcheck: React.FC<ModalcheckProps> = (props) => {
                     <Modal.Title>{(connectionMode === 1 ? 'Domain Connection test' : 'SSL connection test')}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {!Checked && <Spinner animation="border" />}
+                    {!Checked && <p>{statusMessage}</p>}
                     {Checked && (typeof message === "string" ? <p>{statusMessage}</p> : (
                         <><p>SSL cretification grade: {message.grade}</p> <p> SSL certification status: {message.statusMessage}</p></>
                     )) }

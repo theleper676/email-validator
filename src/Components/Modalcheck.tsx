@@ -27,7 +27,7 @@ const Modalcheck: React.FC<ModalcheckProps> = (props) => {
     const [show, setShow] = useState(false);
     const [connectionMode, setConnectionMode] = useState(props.connectionMethod);
     const [record , setRecord] = useState(props.record);
-    const [message, setMessage] = useState('');
+    const [message, setMessage] = useState('This is a message');
     const [statusMessage, setStatusMessage] = useState('SSL Check started');
     const [progress, setPorgress] = useState(0);
 
@@ -50,6 +50,8 @@ const Modalcheck: React.FC<ModalcheckProps> = (props) => {
             //if the progress of the fist handshake is already 100, stop
             if (endpoints[0].progress === 100){
                 setPorgress(endpoints[0].progress);
+                //set the grade and the status message.
+                const {grade,statusMessage} = endpoints[0];
                 setStatusMessage(endpoints[0].statusMessage);
                 setCheck(!Checked);
             }
@@ -59,6 +61,7 @@ const Modalcheck: React.FC<ModalcheckProps> = (props) => {
                     const {data :{ endpoints }} = await axios.get(`https://dns-ssl-checker.herokuapp.com/sslcheck/${props.domain}`);
                     setPorgress(endpoints[0].progress);
                     setStatusMessage(endpoints[0].statusDetailsMessage);
+                    
                     if(endpoints[0].progress === 100){
                         setCheck(!Checked);
                         clearInterval(interval);
@@ -113,7 +116,7 @@ const Modalcheck: React.FC<ModalcheckProps> = (props) => {
                 </Modal.Header>
                 <Modal.Body>
                     {!Checked && <Spinner animation="border" />}
-                    {Checked && message}
+                    {Checked && <p>{message}</p>}
                     <p>{statusMessage}</p>
                     <ProgressBar animated={!Checked} now={progress} label={`${progress}%`} />
                     </Modal.Body>

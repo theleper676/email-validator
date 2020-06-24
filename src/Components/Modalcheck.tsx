@@ -115,7 +115,7 @@ const Modalcheck: React.FC<ModalcheckProps> = (props) => {
                     {!Checked && <Spinner animation="border" />}
                     {Checked && message}
                     <p>{statusMessage}</p>
-                    <ProgressBar animated now={progress} label={`${progress}%`} />
+                    <ProgressBar animated={!Checked} now={progress} label={`${progress}%`} />
                     </Modal.Body>
                 <Modal.Footer>
                     {Checked && <Button variant="primary" onClick={() => {

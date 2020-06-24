@@ -6,7 +6,7 @@ import Button from "react-bootstrap/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Modal from 'react-bootstrap/Modal';
 import Spinner from 'react-bootstrap/Spinner';
-import ProgressBar from 'react-bootstrap/ProgressBar'
+import ProgressBar from 'react-bootstrap/ProgressBar';
 
 interface ModalcheckProps {
     domain: string | null,
@@ -27,7 +27,7 @@ const Modalcheck: React.FC<ModalcheckProps> = (props) => {
     const [show, setShow] = useState(false);
     const [connectionMode, setConnectionMode] = useState(props.connectionMethod);
     const [record , setRecord] = useState(props.record);
-    const [message, setMessage] = useState('This is a message');
+    const [message, setMessage] = useState<string | { grade: string,statusMessage:string }>('Checking Connection...');
     const [statusMessage, setStatusMessage] = useState('SSL Check started');
     const [progress, setPorgress] = useState(0);
 
@@ -51,7 +51,8 @@ const Modalcheck: React.FC<ModalcheckProps> = (props) => {
             if (endpoints[0].progress === 100){
                 setPorgress(endpoints[0].progress);
                 //set the grade and the status message.
-                const {grade,statusMessage} = endpoints[0];
+                const {grade,statusMessage} = endpoints[0]
+                setMessage({grade,statusMessage});
                 setStatusMessage(endpoints[0].statusMessage);
                 setCheck(!Checked);
             }
@@ -66,6 +67,11 @@ const Modalcheck: React.FC<ModalcheckProps> = (props) => {
                         setCheck(!Checked);
                         clearInterval(interval);
                     }
+                else if(endpoints[0].statusMessage === 'Failed to communicate with the secure server'){
+                    setCheck(!Checked);
+                    clearInterval(interval);
+                    setStatusMessage('SSL generation failed. please contact DNS QA');
+                }
                 },6000);
             }
         },8000);
@@ -99,11 +105,13 @@ const Modalcheck: React.FC<ModalcheckProps> = (props) => {
         handleShow();
         if (connectionMode === 1) {
             CheckDNSStatus();
+           
         }
         else if (connectionMode === 2) {
             CheckSSLStatus();
         }
     }
+
     return (
         <div>
             <Button variant='outline-primary' onClick={() => {
@@ -116,8 +124,10 @@ const Modalcheck: React.FC<ModalcheckProps> = (props) => {
                 </Modal.Header>
                 <Modal.Body>
                     {!Checked && <Spinner animation="border" />}
-                    {Checked && <p>{message}</p>}
-                    <p>{statusMessage}</p>
+                    {Checked && (typeof message === "string" ? <p>{statusMessage}</p> : (
+                        <><p>SSL cretification grade: {message.grade}</p> <p> SSL certification status: {message.statusMessage}</p></>
+                    )) }
+                    
                     <ProgressBar animated={!Checked} now={progress} label={`${progress}%`} />
                     </Modal.Body>
                 <Modal.Footer>
